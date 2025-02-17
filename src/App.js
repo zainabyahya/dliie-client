@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Assessment from "./pages/Assessment";
+import Auth from "./pages/Auth";
+import Community from "./pages/Community";
+import Learning from "./pages/Learning";
+import Library from "./pages/Library";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/hhhh.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <div className=" w-full h-screen">
+      < Navbar />
+      <div className='min-h-[70vh]'>
+        <Routes>
+          < Route path="/" element={<Home />} />
+          < Route path="/assessment" element={<Assessment />} />
+          < Route path="/community" element={<Community />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/learning" element={<Learning />} />
+          <Route path="/library" element={<Library />} />
+          <Route path="/auth" element={<Auth />} />
+        </Routes>
+      </div>
+    </div >
+
   );
 }
 
