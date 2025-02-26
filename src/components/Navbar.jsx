@@ -67,7 +67,7 @@ function Navbar({ isAuthenticated }) {
         className="text-xl font-bold cursor-pointer px-5"
         onClick={() => navigate('/')}
       >
-        معلم 2.0
+       ديوان رقمي
       </div>
 
       {/* Mobile Menu Button */}

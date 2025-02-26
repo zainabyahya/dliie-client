@@ -5,6 +5,12 @@ import FormWrapper from "../ui/FormWrapper"
 import { Field as FormikField, useField } from 'formik';
 import QuizForm from '../ui/QuizForm';
 import ToggleList from '../ui/ToggleList';
+import Card from '../ui/Card';
+import Dropdown from '../ui/Dropdown';
+import Sidebar from '../ui/Sidebar';
+import Accordion from '../ui/Accordion';
+import Alert from '../ui/Alert';
+import Modal from '../ui/Modal';
 
 // A custom Formik checkbox component using useField
 const Checkbox = ({ name, label }) => {
@@ -22,6 +28,30 @@ const Checkbox = ({ name, label }) => {
 
 function Home() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const options = [
+    { value: 'red', label: 'أحمر' },
+    { value: 'green', label: 'أخضر' },
+    { value: 'blue', label: 'أزرق' },
+  ];
+  const accordionItems = [
+    {
+      title: "الموضوع الأول",
+      content: "هذا هو محتوى الموضوع الأول. يمكنك وضع أي معلومات هنا حسب الحاجة."
+    },
+    {
+      title: "الموضوع الثاني",
+      content: "هذا هو محتوى الموضوع الثاني. يتم عرضه عند النقر على العنوان."
+    },
+    {
+      title: "الموضوع الثالث",
+      content: "هذا هو محتوى الموضوع الثالث. يمكنك تخصيص المحتوى كما تشاء."
+    }
+  ];
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedTab, setSelectedTab] = useState("module1");
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -73,6 +103,21 @@ function Home() {
       borderColor: "border-primary",
     },
   ];
+  const tabs = [
+    { value: "module1", label: "الوحدة الأولى" },
+    { value: "module2", label: "الوحدة الثانية" },
+    { value: "module3", label: "الوحدة الثالثة" },
+  ];
+
+  const handleCardPress = () => {
+    console.log("تم الضغط على البطاقة!");
+    // You can add navigation logic here
+  };
+
+  // Action when the button inside the card is pressed
+  const handleButtonPress = (e) => {
+    console.log("تم الضغط على الزر داخل البطاقة!");
+  };
 
   const handleFormSubmit = (data) => {
     console.log("تم إرسال بيانات النموذج:", data);
@@ -83,96 +128,87 @@ function Home() {
   };
 
   return (
-    <div className="p-6 space-y-6" dir="rtl">
-      {/* 1. Basic Action Button */}
-      <Button
-        label="ابدأ الآن"
-        onPress={() => console.log("التنقل إلى التسجيل...")}
-        type="primary"
+    <div className="flex flex-col md:flex-row" dir="rtl">
+    
+      <div className="w-full md:w-2/12">
+        <Sidebar 
+          items={tabs}
+          selected={selectedTab}
+          onSelect={(value) => setSelectedTab(value)}
+        />
+      </div>
+      {/* Main content column */}
+      <div className="flex-1 p-4">
+        {selectedTab === "module1" &&  <Accordion items={accordionItems} />}
+        {selectedTab === "module2" &&  <div className="p-6" dir="rtl">
+      {/* Success alert */}
+      <Alert 
+        type="success" 
+        message="تمت العملية بنجاح!" 
+        closable={true} 
       />
 
-      {/* 2. Fixed-Width Secondary Button */}
-      <Button
-        label="إلغاء"
-        onPress={() => console.log("إغلاق النافذة...")}
-        type="secondary"
-        width="150px"
+      {/* Error alert */}
+      <Alert 
+        type="error" 
+        message="حدث خطأ أثناء العملية!" 
+        closable={true} 
+        className="mt-4"
       />
 
-      {/* 3. Tertiary Button with Custom Color */}
-      <Button
-        label="اعرف المزيد"
-        onPress={() => console.log("فتح التفاصيل...")}
-        type="tertiary"
-        color="#FF5733" 
+      {/* Warning alert */}
+      <Alert 
+        type="warning" 
+        message="يرجى الانتباه إلى هذه التحذيرات." 
+        closable={false} 
+        className="mt-4"
       />
 
-      {/* 4. Icon-Only Circular Button for Mobile or Floating Action */}
-      <Button
-        icon={<FaPlus />}
-        onPress={() => console.log("إضافة عنصر جديد...")}
-        type="primary"
-        shape="rounded"  // عند غياب النص، يتم تطبيق شكل دائري كامل
-        width="3rem"
+      {/* Info alert */}
+      <Alert 
+        type="info" 
+        message="هذه رسالة معلومات." 
+        closable={true} 
+        className="mt-4"
       />
-
-      {/* 5. Button with Icon and Label */}
-      <Button
-        label="الرئيسية"
-        icon={<FaHome />}
-        onPress={() => console.log("التنقل إلى الصفحة الرئيسية...")}
-        type="primary"
-        shape="rectangle"
+    </div>}
+        {selectedTab === "module3" &&  <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6" dir="rtl">
+      <Card 
+        coverImage="https://picsum.photos/400/200" 
+        title="الوحدة التعليمية الأولى" 
+        subtitle="مقدمة في البرمجة باستخدام بايثون"
+        buttonLabel="ابدأ الآن"
+        onPress={handleCardPress}
+        onButtonPress={handleButtonPress}
       />
-
-      {/* 6. Loading State Button */}
-      <Button
-        label="إرسال"
-        onPress={handleSubmit}
-        type="primary"
-        loading={isSubmitting}
-      />
-
-      {/* 7. Square (No Rounding) Icon-Only Button */}
-      <Button
-        icon={<FaCog />}
-        onPress={() => console.log("فتح الإعدادات...")}
-        type="secondary"
-        width="3rem"
-      />
-
-      {/* 7b. Square (No Rounding) Button with Label */}
-      <Button
-        label="الإعدادات"
-        icon={<FaCog />}
-        onPress={() => console.log("فتح الإعدادات...")}
-        type="secondary"
-      />
-
-      {/* 8. Responsive Full-Width Button for Mobile Forms */}
-      <Button
-        label="المتابعة للدفع"
-        onPress={() => console.log("المتابعة للدفع...")}
-        type="primary"
-        width="100%"
-      />
-
-      <FormWrapper 
-        fields={fields} 
-        onSubmit={handleFormSubmit} 
-        buttonLabel="تسجيل" 
-        formWidth="400px"
+      <Card
+        coverImage="https://picsum.photos/400/200" 
+        title="الوحدة التعليمية الثانية" 
+        subtitle="أساسيات تطوير الويب"
+        buttonLabel="ابدأ الآن"
+        onPress={handleCardPress}
+        onButtonPress={handleButtonPress}      />
+         <div className="p-6" dir="rtl">
+      <button 
+        onClick={() => setModalOpen(true)} 
+        className="px-4 py-2 bg-primary text-white rounded-md focus:outline-none"
       >
-        {/* Custom Formik input added as children */}
-        <Checkbox name="terms" label="أوافق على الشروط والأحكام" />
-      </FormWrapper>
+        فتح النافذة المنبثقة
+      </button>
 
-      <QuizForm 
-        questions={questions} 
-        onSubmit={handleQuizSubmit} 
-        formWidth="400px"
-      />
-      <ToggleList/>
+      <Modal 
+        open={modalOpen} 
+        onClose={() => setModalOpen(false)} 
+        title="عنوان النافذة"
+      >
+        <p>هذا هو محتوى النافذة المنبثقة. يمكنك وضع أي محتوى هنا حسب الحاجة.</p>
+      </Modal>
+    </div>
+    </div>
+    }
+
+      </div>
+
     </div>
   );
 }

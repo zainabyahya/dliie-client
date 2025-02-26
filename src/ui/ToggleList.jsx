@@ -25,7 +25,7 @@ const ToggleList = () => {
   };
 
   return (
-    <div className="p-4 border rounded-md max-w-md mx-auto" dir="rtl">
+    <div className="p-4 border rounded-md max-w-96" dir="rtl">
       {/* Input Section */}
       <div className="flex mb-4">
         <input
