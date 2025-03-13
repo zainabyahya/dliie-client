@@ -83,7 +83,7 @@ function Navbar({ isAuthenticated }) {
 
       {/* Mobile Navigation */}
       <div
-        className={`lg:hidden absolute top-16 left-0 flex flex-col items-end bg-white w-48 rounded-lg shadow-lg transition-all duration-300 ${menuOpen ? 'block' : 'hidden'}`}
+        className={`lg:hidden absolute z-10 top-16 left-0 flex flex-col items-end bg-white w-48 rounded-lg shadow-lg transition-all duration-300 ${menuOpen ? 'block' : 'hidden'}`}
       >
         {navLinks.map(({ label, path }) => (
           <span
