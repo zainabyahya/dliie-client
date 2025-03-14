@@ -9,6 +9,9 @@ import Library from "./pages/Library";
 import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
 import LearningTopicPage from "./components/LearningTopicPage.jsx"
+import CommunityDetail from './pages/CommunityDetail';
+import LibraryDetails from './pages/LibraryDetails';
+
 function App() {
   return (
     <div className="flex flex-col w-full min-h-screen">
@@ -18,11 +21,13 @@ function App() {
           < Route path="/" element={<Home />} />
           < Route path="/assessment" element={<Assessment />} />
           < Route path="/community" element={<Community />} />
+          <Route path="/community/:postId" element={<CommunityDetail />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/learning/*" element={<Learning />}>
             <Route path=":areaId/:topic" element={<LearningTopicPage />} />
           </Route>
           <Route path="/library" element={<Library />} />
+          <Route path="/library/:itemId" element={<LibraryDetails />} />
           <Route path="/auth" element={<Auth />} />
         </Routes>
       </div>

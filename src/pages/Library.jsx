@@ -1,9 +1,12 @@
 // Library.js
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Card from "../ui/Card";
 import SearchInput from "../ui/SearchInput";
 
 function Library() {
+  const navigate = useNavigate();
+
   const resources = [
     {
       id: 1,
@@ -75,6 +78,7 @@ function Library() {
             coverImage={resource.coverImage}
             title={resource.title}
             content={resource.content}
+            onPress={() => navigate(`/library/${resource.id}`)}
           />
         ))}
       </div>
