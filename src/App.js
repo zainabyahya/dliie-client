@@ -11,12 +11,14 @@ import Footer from "./components/Footer";
 import LearningTopicPage from "./components/LearningTopicPage.jsx"
 import CommunityDetail from './pages/CommunityDetail';
 import LibraryDetails from './pages/LibraryDetails';
+import Login from "./pages/Login.jsx";
+import Signup from "./pages/Signup.jsx";
 
 function App() {
   return (
     <div className="flex flex-col w-full min-h-screen">
       < Navbar />
-      <div className='flex-1'>
+      <div className='flex-1 flex flex-col'>
         <Routes>
           < Route path="/" element={<Home />} />
           < Route path="/assessment" element={<Assessment />} />
@@ -28,7 +30,8 @@ function App() {
           </Route>
           <Route path="/library" element={<Library />} />
           <Route path="/library/:itemId" element={<LibraryDetails />} />
-          <Route path="/auth" element={<Auth />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </div>
       <Footer />
