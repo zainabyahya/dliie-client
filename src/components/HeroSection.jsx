@@ -14,7 +14,7 @@ const HeroSection = ({ onCtaClick }) => {
       <div className="absolute inset-0 bg-gray-900 opacity-40"></div>
       {/* Text and button overlay */}
       <div className="absolute inset-0 flex flex-col justify-center items-center">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+        <h1 className="p-2 text-3xl md:text-4xl font-bold text-white text-center mb-4">
           مبادرة الثقافة الرقمية للمعلمين العراقيين (DLIIE)
         </h1>
         <p className="text-lg text-white mb-6">

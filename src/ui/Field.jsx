@@ -1,12 +1,17 @@
 // Field.js
-import React from 'react';
-import { useField } from 'formik';
+import React from "react";
+import { useField } from "formik";
 
-const Field = ({ name, placeholder = '', borderColor = 'border-gray-300', ...props }) => {
+const Field = ({
+  name,
+  placeholder = "",
+  borderColor = "border-gray-300",
+  ...props
+}) => {
   const [field, meta] = useField(name);
 
   return (
-    <div>
+    <div className="my-3">
       <input
         {...field}
         {...props}

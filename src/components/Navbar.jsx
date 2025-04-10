@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsList } from "react-icons/bs";
 
 const navLinks = [
-  { label: 'الصفحة الرئيسية', path: '/' },
-  { label: 'المكتبة', path: '/library' },
-  { label: 'التقييم', path: '/assessment' },
-  { label: 'وحدات التعلم', path: '/learning' },
-  { label: 'المجتمع', path: '/community' },
+  { label: "الصفحة الرئيسية", path: "/" },
+  { label: "المكتبة", path: "/library" },
+  { label: "التقييم", path: "/assessment" },
+  { label: "وحدات التعلم", path: "/learning" },
+  { label: "المجتمع", path: "/community" },
 ];
 
 function Navbar({ isAuthenticated }) {
@@ -20,7 +20,7 @@ function Navbar({ isAuthenticated }) {
   };
 
   const handleClickOutside = (event) => {
-    if (!event.target.closest('.dropdown-container')) {
+    if (!event.target.closest(".dropdown-container")) {
       setMenuOpen(false);
     }
   };
@@ -35,7 +35,7 @@ function Navbar({ isAuthenticated }) {
       return (
         <>
           <span
-            onClick={() => navigate('/profile')}
+            onClick={() => navigate("/profile")}
             className="block px-4 py-2 hover:bg-gray-200 cursor-pointer w-full text-right"
           >
             الملف الشخصي
@@ -51,7 +51,7 @@ function Navbar({ isAuthenticated }) {
     } else {
       return (
         <span
-          onClick={() => navigate('/auth')}
+          onClick={() => navigate("/login")}
           className="block px-4 py-2 hover:bg-gray-200 cursor-pointer w-full text-right"
         >
           تسجيل الدخول
@@ -65,9 +65,9 @@ function Navbar({ isAuthenticated }) {
       {/* Website Name */}
       <div
         className="text-xl font-bold cursor-pointer px-5"
-        onClick={() => navigate('/')}
+        onClick={() => navigate("/")}
       >
-       ديوان رقمي
+        ديوان رقمي
       </div>
 
       {/* Mobile Menu Button */}
@@ -83,7 +83,9 @@ function Navbar({ isAuthenticated }) {
 
       {/* Mobile Navigation */}
       <div
-        className={`lg:hidden absolute z-10 top-16 left-0 flex flex-col items-end bg-white w-48 rounded-lg shadow-lg transition-all duration-300 ${menuOpen ? 'block' : 'hidden'}`}
+        className={`lg:hidden absolute z-10 top-16 left-0 flex flex-col items-end bg-white w-48 rounded-lg shadow-lg transition-all duration-300 ${
+          menuOpen ? "block" : "hidden"
+        }`}
       >
         {navLinks.map(({ label, path }) => (
           <span
@@ -118,7 +120,7 @@ function Navbar({ isAuthenticated }) {
           {isAuthenticated ? (
             <>
               <span
-                onClick={() => navigate('/profile')}
+                onClick={() => navigate("/profile")}
                 className="block px-4 py-2 cursor-pointer"
               >
                 الملف الشخصي
@@ -132,7 +134,7 @@ function Navbar({ isAuthenticated }) {
             </>
           ) : (
             <span
-              onClick={() => navigate('/auth')}
+              onClick={() => navigate("/login")}
               className="block px-4 py-2 cursor-pointer"
             >
               تسجيل الدخول
