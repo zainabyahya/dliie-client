@@ -1,109 +1,186 @@
-// Assessment.js
-import React, { useState } from "react";
+// src/pages/Assessment.jsx
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import Button from "../ui/Button";
-
-const questions = [
-  {
-    id: 1,
-    questionText: "ما هو تقييمك للمهارات الرقمية لديك؟",
-    options: ["0", "1", "2", "3", "4"],
-  },
-  {
-    id: 2,
-    questionText: "ما هو تقييمك لاستخدام التكنولوجيا في التدريس؟",
-    options: ["0", "1", "2", "3", "4"],
-  },
-  {
-    id: 3,
-    questionText: "ما مدى رضاك عن الموارد الرقمية المتاحة لديك؟",
-    options: ["0", "1", "2", "3", "4"],
-  },
-];
+import {
+  useGetQuestionnairesQuery,
+  useSubmitAssessmentMutation,
+} from "../services/api";
 
 const Assessment = () => {
-  // Track the current question index and store answers.
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState(Array(questions.length).fill(null));
+  // 1) Fetch all questionnaires (your API slice exports useGetQuestionnairesQuery)
+  const {
+    data: questionnaires,
+    isLoading,
+    isError,
+  } = useGetQuestionnairesQuery();
 
-  const currentQuestion = questions[currentQuestionIndex];
+  // grab the first (or pick by ID if you prefer)
+  const questionnaire = Array.isArray(questionnaires)
+    ? questionnaires[0]
+    : questionnaires;
 
-  // Update answer for the current question.
-  const handleAnswerChange = (option) => {
-    const newAnswers = [...answers];
-    newAnswers[currentQuestionIndex] = option;
-    setAnswers(newAnswers);
+  // 2) mutation hook to save the result
+  const [submitAssessment] = useSubmitAssessmentMutation();
+
+  // 3) local state
+  const userId = useSelector((s) => s.auth?.user?._id);
+  const [currentIndex, setCurrentIndex] = useState(-1); // -1 = show intro
+  const [answers, setAnswers] = useState([]);
+  const [result, setResult] = useState(null);
+
+  // once questionnaire arrives, init answers array
+  useEffect(() => {
+    if (questionnaire?.questions) {
+      setAnswers(Array(questionnaire.questions.length).fill(null));
+    }
+  }, [questionnaire]);
+
+  if (isLoading) return <p>Loading…</p>;
+  if (isError) return <p>Failed to load questionnaire</p>;
+  if (!questionnaire) return <p>No questionnaire found</p>;
+
+  // scoring → level
+  const computeLevel = (score) => {
+    if (score < 20) return "A1";
+    if (score < 34) return "A2";
+    if (score < 50) return "B1";
+    if (score < 66) return "B2";
+    if (score < 81) return "C1";
+    return "C2";
   };
 
-  // Navigate to next question (within bounds).
-  const handleNext = () => {
-    setCurrentQuestionIndex((prev) => Math.min(prev + 1, questions.length - 1));
+  // final submit
+  const handleSubmit = async () => {
+    const totalScore = answers.reduce((sum, a) => sum + (Number(a) || 0), 0);
+    const level = computeLevel(totalScore);
+    setResult({ totalScore, level });
+
+    // if logged in, persist
+    if (userId) {
+      const responses = questionnaire.questions.map((q, i) => {
+        const score = Number(answers[i]) || 0;
+        const opt = q.options.find((o) => o.score === score) || {};
+        return {
+          questionId: q._id,
+          selectedOption: { text: opt.text || "", score },
+        };
+      });
+      try {
+        await submitAssessment({
+          user: userId,
+          questionnaire: questionnaire._id,
+          responses,
+        }).unwrap();
+      } catch (err) {
+        console.error("Save failed:", err);
+      }
+    }
   };
 
-  // Navigate to previous question (within bounds).
-  const handleBack = () => {
-    setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0));
-  };
+  // --- RENDER ---
 
-  // Handle form submission.
-  const handleSubmit = () => {
-    console.log("Submitted Answers:", answers);
-    // Here you could send the answers to an API for further processing.
-  };
+  // 1) intro
+  if (currentIndex < 0) {
+    return (
+      <div
+        className="h-full flex-1  p-6 flex items-center justify-center"
+        dir="rtl"
+      >
+        <div className="max-w-lg p-6 bg-white rounded shadow text-center flex flex-col items-center justify-center">
+          <h1 className="text-3xl font-bold mb-4">{questionnaire.title}</h1>
+          <p className="mb-6">{questionnaire.description}</p>
+          <Button
+            label="ابدأ التقييم"
+            onPress={() => setCurrentIndex(0)}
+            type="primary"
+            width="50%"
+          />
+        </div>
+      </div>
+    );
+  }
 
+  // 2) result
+  if (result) {
+    return (
+      <div
+        className="h-full flex-1 p-6 flex flex-col items-center justify-center"
+        dir="rtl"
+      >
+        <div className="max-w-lg min-w-96 p-6 bg-white rounded shadow text-center  flex flex-col items-center justify-center">
+          <h2 className="text-2xl font-bold mb-4">نتيجتك</h2>
+          <p className="mb-2">
+            الدرجة الكلية: <strong>{result.totalScore}</strong>
+          </p>
+          <p className="mb-4">
+            المستوى: <strong>{result.level}</strong>
+          </p>
+          <Button
+            label="إعادة التقييم"
+            onPress={() => {
+              setResult(null);
+              setAnswers(Array(questionnaire.questions.length).fill(null));
+              setCurrentIndex(0);
+            }}
+            type="secondary"
+            width="50%"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // 3) question flow
+  const q = questionnaire.questions[currentIndex];
   return (
     <div
-      className="h-full p-6 flex flex-1 justify-center items-center"
+      className="h-full flex-1  p-6 flex items-center justify-center"
       dir="rtl"
     >
-      <div className="max-w-xl min-w-lg mx-auto  p-6 rounded-md shadow-md">
-        <h2 className="text-2xl font-bold mb-4 text-center">التقييم الذاتي</h2>
-        <p className="mb-4 text-center">
-          السؤال {currentQuestionIndex + 1} من {questions.length}
-        </p>
-        <p className="text-xl mb-4">{currentQuestion.questionText}</p>
-        <div className="mb-6">
-          {currentQuestion.options.map((option, index) => (
-            <div key={index} className="mb-2">
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  value={option}
-                  name={`question-${currentQuestion.id}`}
-                  checked={answers[currentQuestionIndex] === option}
-                  onChange={() => handleAnswerChange(option)}
-                  className="form-radio text-primary ml-2"
-                />
-                <span>{option}</span>
-              </label>
-            </div>
-          ))}
-        </div>
-        <div className="flex justify-between">
-          {currentQuestionIndex > 0 ? (
+      <div className="max-w-xl w-full p-6 bg-white rounded shadow">
+        <h3 className="text-xl mb-2 text-center">
+          سؤال {currentIndex + 1} من {questionnaire.questions.length}
+        </h3>
+        <p className="mb-4 text-xl font-bold">{q.text}</p>
+        {q.options.map((opt, idx) => (
+          <label key={idx} className="block mb-2 cursor-pointer">
+            <input
+              type="radio"
+              checked={answers[currentIndex] === opt.score}
+              onChange={() => {
+                const a = [...answers];
+                a[currentIndex] = opt.score;
+                setAnswers(a);
+              }}
+              className="form-radio text-primary ml-2"
+            />
+            <span className="text-lg">{opt.text}</span>
+          </label>
+        ))}
+        <div className="flex justify-between mt-6">
+          {currentIndex > 0 ? (
             <Button
-              label="السؤال السابق"
-              onPress={handleBack}
+              label="السابق"
+              onPress={() => setCurrentIndex((i) => i - 1)}
               type="secondary"
-              shape="rectangle"
               width="45%"
             />
           ) : (
-            <div></div>
+            <div style={{ width: "45%" }} />
           )}
-          {currentQuestionIndex < questions.length - 1 ? (
+          {currentIndex < questionnaire.questions.length - 1 ? (
             <Button
-              label="السؤال التالي"
-              onPress={handleNext}
+              label="التالي"
+              onPress={() => setCurrentIndex((i) => i + 1)}
               type="primary"
-              shape="rectangle"
               width="45%"
             />
           ) : (
             <Button
-              label="إرسال التقييم"
+              label="إرسال"
               onPress={handleSubmit}
               type="primary"
-              shape="rectangle"
               width="45%"
             />
           )}
