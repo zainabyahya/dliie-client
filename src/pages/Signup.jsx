@@ -1,43 +1,72 @@
-// Signup.js
+// src/pages/Signup.jsx
 import React from "react";
 import { Formik, Form } from "formik";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Field from "../ui/Field";
 import Button from "../ui/Button";
+import { useSignupMutation } from "../services/api";
+import { setCredentials } from "../slices/authSlice";
 
 const Signup = () => {
+  const [signup, { isLoading }] = useSignupMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const initialValues = {
-    name: "",
-    email: "",
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
     password: "",
     confirmPassword: "",
   };
 
-  const handleSubmit = (values) => {
-    console.log("Signup values:", values);
-    // Add your sign-up logic here (e.g., API call)
+  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
+    console.log("🚀 ~ handleSubmit ~ values:", values);
+    if (values.password !== values.confirmPassword) {
+      return setErrors({ confirmPassword: "كلمتا المرور غير متطابقتين" });
+    }
+    try {
+      const user = await signup(values).unwrap();
+      dispatch(setCredentials(user));
+      navigate("/"); // or dashboard
+    } catch (err) {
+      console.error(err);
+      setErrors({ general: err?.data?.message || "Signup failed" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div
-      className="h-full p-6 flex-1 flex justify-center items-center"
+      className="min-h-screen p-6 flex justify-center items-center"
       dir="rtl"
     >
       <div className="bg-white p-8 rounded-md shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold mb-4 text-center">إنشاء حساب</h1>
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-          {({ isSubmitting }) => (
+          {({ isSubmitting, errors }) => (
             <Form>
+              {errors.general && (
+                <p className="text-red-500 mb-2">{errors.general}</p>
+              )}
               <Field
-                name="name"
+                name="firstName"
                 type="text"
-                placeholder="الاسم الكامل"
+                placeholder="الاسم الاول"
                 className="mb-4"
               />
               <Field
-                name="email"
-                type="email"
-                placeholder="البريد الإلكتروني"
+                name="lastName"
+                type="text"
+                placeholder="الاسم الاخير"
+                className="mb-4"
+              />
+              <Field
+                name="phoneNumber"
+                type="phone"
+                placeholder="رقم الهاتف"
                 className="mb-4"
               />
               <Field
@@ -54,7 +83,6 @@ const Signup = () => {
               />
               <Button
                 label="إنشاء الحساب"
-                onPress={undefined}
                 htmlType="submit"
                 type="primary"
                 shape="rectangle"

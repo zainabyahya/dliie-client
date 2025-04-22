@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsList } from "react-icons/bs";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../slices/authSlice";
 
 const navLinks = [
   { label: "الصفحة الرئيسية", path: "/" },
@@ -10,12 +12,15 @@ const navLinks = [
   { label: "المجتمع", path: "/community" },
 ];
 
-function Navbar({ isAuthenticated }) {
+function Navbar() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [menuOpen, setMenuOpen] = useState(false);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const logoutHandler = () => {
-    // dispatch(logout());
+    dispatch(logout());
     navigate("/", { replace: true });
   };
 
