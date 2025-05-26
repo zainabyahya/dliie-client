@@ -9,7 +9,7 @@ import Library from "./pages/Library";
 import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
 import LearningTopicPage from "./components/LearningTopicPage.jsx"
-import CommunityDetail from './pages/CommunityDetail';
+import CommunityPost from './pages/CommunityPost';
 import LibraryDetails from './pages/LibraryDetails';
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
@@ -23,7 +23,7 @@ function App() {
           < Route path="/" element={<Home />} />
           < Route path="/assessment" element={<Assessment />} />
           < Route path="/community" element={<Community />} />
-          <Route path="/community/:postId" element={<CommunityDetail />} />
+          <Route path="/community/:postId" element={<CommunityPost />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/learning/*" element={<Learning />}>
             <Route path=":areaId/:topic" element={<LearningTopicPage />} />

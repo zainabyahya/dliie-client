@@ -1,7 +1,10 @@
 import React from "react";
 import Button from "../ui/Button";
+import { useNavigate } from "react-router-dom";
 
-const HeroSection = ({ onCtaClick }) => {
+const HeroSection = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="relative">
       {/* Blurred background image */}
@@ -22,9 +25,9 @@ const HeroSection = ({ onCtaClick }) => {
         </p>
         <Button
           label="خذ التقييم"
-          onPress={onCtaClick}
           type="primary"
           shape="rectangle"
+          onPress={() => navigate("/assessment")}
         />
       </div>
     </section>

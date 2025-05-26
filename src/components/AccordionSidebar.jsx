@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function AccordionSidebar({
-  areas, // now each area has `.competencies`
+  areas, 
   selectedAreaId,
   selectedCompetencyId,
 }) {
@@ -14,7 +14,7 @@ export default function AccordionSidebar({
 
   const toggleArea = (i) => setExpandedIndex(expandedIndex === i ? null : i);
   const select = (areaId, compId) => {
-    nav(`/learning/${areaId}/competency/${compId}`);
+    nav(`/learning/${areaId}/${compId}`);
     setMobileOpen(false);
   };
 

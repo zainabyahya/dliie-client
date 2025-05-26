@@ -31,8 +31,15 @@ const Card = ({
           </h2>
         )}
         {content && (
-          <p className={clsx("text-gray-700 mb-4", textDirection)}>{content}</p>
+          <div
+            className={clsx(
+              "text-gray-700 mb-4 prose max-w-none",
+              textDirection
+            )}
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
         )}
+
         {buttonLabel && onButtonPress && (
           <button
             onClick={(e) => {

@@ -29,7 +29,7 @@ function Home() {
   return (
     <div className="flex flex-col min-h-screen" dir="rtl">
       {/* Hero Section */}
-      <HeroSection onCtaClick={() => console.log("تم النقر على زر التقييم")} />
+      <HeroSection />
 
       {/* Brief Overview Section */}
       <section className="p-8" dir="rtl">

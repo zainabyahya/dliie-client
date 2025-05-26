@@ -1,20 +1,18 @@
-// src/services/api.js
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const api = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({
         baseUrl: '/',
         prepareHeaders: (headers, { getState }) => {
-            // grab token from your auth slice (optional chaining to avoid undefined errors)
-            const token = getState().auth?.token
+            const token = getState().auth?.token;
             if (token) {
-                headers.set('authorization', `Bearer ${token}`)
+                headers.set('authorization', `Bearer ${token}`);
             }
-            return headers
+            return headers;
         },
     }),
-    tagTypes: ['Area', 'Competency', 'Questionnaire', 'Assessment', 'User'],
+    tagTypes: ['Area', 'Competency', 'Questionnaire', 'Assessment', 'User', 'CommunityPost'],
     endpoints: (builder) => ({
         // 1) GET /areas → [Area]
         getAreas: builder.query({
@@ -37,7 +35,7 @@ export const api = createApi({
             providesTags: ['Questionnaire'],
         }),
 
-        // 4) POST /assessment/submit  (body = { user, questionnaire, responses[] })
+        // 4) POST /assessment/submit → { user, questionnaire, responses[] }
         submitAssessment: builder.mutation({
             query: (body) => ({
                 url: 'assessment/submit',
@@ -53,7 +51,7 @@ export const api = createApi({
             providesTags: ['Assessment'],
         }),
 
-        // 6) POST /auth/login  → { token, user }
+        // 6) POST /auth/login → { token, user }
         login: builder.mutation({
             query: (credentials) => ({
                 url: 'auth/login',
@@ -72,10 +70,70 @@ export const api = createApi({
             }),
             invalidatesTags: ['User'],
         }),
-    }),
-})
 
-// Export hooks for usage in functional components
+        // 8) GET /community → [CommunityPost]
+        getCommunityPosts: builder.query({
+            query: () => 'community',
+            providesTags: ['CommunityPost'],
+        }),
+
+        // 9) POST /community → create a new post
+        createCommunityPost: builder.mutation({
+            query: (newPost) => ({
+                url: 'community',
+                method: 'POST',
+                body: newPost,
+            }),
+            invalidatesTags: ['CommunityPost'],
+        }),
+
+        // 10) GET /community/:id → fetch a single post with comments
+        getCommunityPostById: builder.query({
+            query: (id) => `community/${id}`,
+            providesTags: (result, error, id) => [{ type: 'CommunityPost', id }],
+        }),
+
+        // 11) POST /community/:id/comment → add a comment
+        addCommentToPost: builder.mutation({
+            query: ({ postId, text }) => ({
+                url: `community/${postId}/comments`,
+                method: 'POST',
+                body: { text },
+            }),
+            invalidatesTags: (result, error, { postId }) => [{ type: 'CommunityPost', id: postId }],
+        }),
+        // DELETE /community/:id → delete a post
+        deleteCommunityPost: builder.mutation({
+            query: (postId) => ({
+                url: `community/${postId}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['CommunityPost'],
+        }),
+
+        // DELETE /community/:postId/comments/:commentId → delete a comment
+        deleteComment: builder.mutation({
+            query: ({ postId, commentId }) => ({
+                url: `community/${postId}/comments/${commentId}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: (result, error, { postId }) => [{ type: 'CommunityPost', id: postId }],
+        }),
+        updateCommunityPost: builder.mutation({
+            query: ({ postId, title, html }) => ({
+                url: `community/${postId}`,
+                method: 'PUT',
+                body: { title, html },
+            }),
+            invalidatesTags: (result, error, { postId }) => [
+                { type: 'CommunityPost', id: postId }
+            ],
+        }),
+
+
+    }),
+});
+
 export const {
     useGetAreasQuery,
     useGetCompetenciesQuery,
@@ -84,4 +142,12 @@ export const {
     useGetAssessmentByUserQuery,
     useLoginMutation,
     useSignupMutation,
-} = api
+    useGetCommunityPostsQuery,
+    useCreateCommunityPostMutation,
+    useGetCommunityPostByIdQuery,
+    useAddCommentToPostMutation,
+    useDeleteCommunityPostMutation,
+    useDeleteCommentMutation,
+    useUpdateCommunityPostMutation,
+
+} = api;
