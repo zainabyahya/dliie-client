@@ -12,7 +12,7 @@ export const api = createApi({
             return headers;
         },
     }),
-    tagTypes: ['Area', 'Competency', 'Questionnaire', 'Assessment', 'User', 'CommunityPost'],
+    tagTypes: ['Area', 'Competency', 'Questionnaire', 'Assessment', 'User', 'CommunityPost', 'LibraryPost', 'Profile'],
     endpoints: (builder) => ({
         // 1) GET /areas → [Area]
         getAreas: builder.query({
@@ -130,7 +130,72 @@ export const api = createApi({
             ],
         }),
 
+        // 12) GET /library → get all library posts
+        getLibraryPosts: builder.query({
+            query: () => 'library',
+            providesTags: ['LibraryPost'],
+        }),
 
+        // 13) GET /library/:id → get one post
+        getLibraryPostById: builder.query({
+            query: (id) => `library/${id}`,
+            providesTags: (result, error, id) => [{ type: 'LibraryPost', id }],
+        }),
+
+        // 14) POST /library → create a new post
+        createLibraryPost: builder.mutation({
+            query: (body) => ({
+                url: 'library',
+                method: 'POST',
+                body,
+            }),
+            invalidatesTags: ['LibraryPost'],
+        }),
+
+        // 15) PUT /library/:id → update a post
+        updateLibraryPost: builder.mutation({
+            query: ({ id, ...body }) => ({
+                url: `library/${id}`,
+                method: 'PUT',
+                body,
+            }),
+            invalidatesTags: (result, error, { id }) => [
+                { type: 'LibraryPost', id },
+                { type: 'LibraryPost' },
+            ],
+        }),
+
+        // 16) DELETE /library/:id → delete a post
+        deleteLibraryPost: builder.mutation({
+            query: (id) => ({
+                url: `library/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['LibraryPost'],
+        }),
+        // Profile - GET /profile/me
+        getMyProfile: builder.query({
+            query: () => 'profile/me',
+            providesTags: ['Profile'],
+        }),
+
+        // Profile - PUT /profile/me
+        updateProfile: builder.mutation({
+            query: (body) => ({
+                url: 'profile/me',
+                method: 'PUT',
+                body,
+            }),
+            invalidatesTags: ['Profile'],
+        }),
+
+        // Profile - DELETE user + profile (DELETE /auth/me or similar)
+        deleteAccount: builder.mutation({
+            query: () => ({
+                url: 'auth/me',
+                method: 'DELETE',
+            }),
+        }),
     }),
 });
 
@@ -149,5 +214,12 @@ export const {
     useDeleteCommunityPostMutation,
     useDeleteCommentMutation,
     useUpdateCommunityPostMutation,
-
+    useGetLibraryPostsQuery,
+    useGetLibraryPostByIdQuery,
+    useCreateLibraryPostMutation,
+    useUpdateLibraryPostMutation,
+    useDeleteLibraryPostMutation,
+    useGetMyProfileQuery,
+    useUpdateProfileMutation,
+    useDeleteAccountMutation,
 } = api;

@@ -10,7 +10,7 @@ import Profile from "./pages/Profile";
 import Footer from "./components/Footer";
 import LearningTopicPage from "./components/LearningTopicPage.jsx"
 import CommunityPost from './pages/CommunityPost';
-import LibraryDetails from './pages/LibraryDetails';
+import LibraryPost from './pages/LibraryPost';
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 
@@ -29,7 +29,7 @@ function App() {
             <Route path=":areaId/:topic" element={<LearningTopicPage />} />
           </Route>
           <Route path="/library" element={<Library />} />
-          <Route path="/library/:itemId" element={<LibraryDetails />} />
+          <Route path="/library/:itemId" element={<LibraryPost />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>
