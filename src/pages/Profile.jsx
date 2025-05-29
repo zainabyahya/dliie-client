@@ -1,18 +1,19 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../ui/Button";
 import Modal from "../ui/Modal";
 import FormWrapper from "../ui/FormWrapper";
 import {
   useGetMyProfileQuery,
-  useUpdateProfileMutation,
+  useUpdateUserInfoMutation,
   useDeleteAccountMutation,
 } from "../services/api";
+import { logout } from "../slices/authSlice";
 
 const Profile = () => {
-  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
   const { data: profile, isLoading, error } = useGetMyProfileQuery();
-  const [updateProfile] = useUpdateProfileMutation();
+  const [updateUserInfo] = useUpdateUserInfoMutation();
   const [deleteAccount] = useDeleteAccountMutation();
 
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -24,6 +25,7 @@ const Profile = () => {
     ) {
       try {
         await deleteAccount().unwrap();
+        dispatch(logout());
         window.location.href = "/";
       } catch (err) {
         alert("فشل في حذف الحساب");
@@ -43,24 +45,38 @@ const Profile = () => {
     currentlyDoing = null,
   } = profile;
 
+  const initialValues = {
+    firstName: userInfo.firstName || "",
+    lastName: userInfo.lastName || "",
+    phoneNumber: userInfo.phoneNumber || "",
+  };
+
   return (
-    <div className="p-6 max-w-2xl mx-auto" dir="rtl">
+    <div className="p-6 max-w-2xl mx-auto my-auto" dir="rtl">
       <h1 className="text-3xl font-bold mb-6">الملف الشخصي</h1>
 
       <div className="bg-white rounded-md shadow-md p-6 space-y-4">
         <p>
-          <span className="font-semibold">الاسم:</span> {userInfo.firstName}{" "}
+          <span className="font-semibold">الاسم الأول:</span>{" "}
+          {userInfo.firstName}
+        </p>
+        <p>
+          <span className="font-semibold">الاسم الأخير:</span>{" "}
           {userInfo.lastName}
+        </p>
+        <p>
+          <span className="font-semibold">رقم الهاتف:</span>{" "}
+          {userInfo.phoneNumber}
         </p>
         <p>
           <span className="font-semibold">المستوى الحالي:</span> {currentLevel}
         </p>
         <p>
-          <span className="font-semibold">النتيجة التقييمية:</span>{" "}
+          <span className="font-semibold">نتيجة التقييم الأخيرة:</span>{" "}
           {assessmentScore}
         </p>
         <p>
-          <span className="font-semibold">الوحدة الحالية:</span>{" "}
+          <span className="font-semibold">وحدة التعلم الحالية:</span>{" "}
           {currentlyDoing ? currentlyDoing.title : "لا يوجد"}
         </p>
 
@@ -85,18 +101,16 @@ const Profile = () => {
         title="تعديل الملف الشخصي"
       >
         <FormWrapper
-          initialValues={{
-            currentLevel,
-            currentlyDoing: currentlyDoing ? currentlyDoing._id : "",
-          }}
+          initialValues={initialValues}
           fields={[
-            { name: "currentLevel", placeholder: "المستوى الحالي" },
-            { name: "currentlyDoing", placeholder: "المعرفة الحالية (ID)" },
+            { name: "firstName", placeholder: "الاسم الأول" },
+            { name: "lastName", placeholder: "الاسم الأخير" },
+            { name: "phoneNumber", placeholder: "رقم الهاتف" },
           ]}
           buttonLabel="حفظ التغييرات"
           onSubmit={async (values, { setSubmitting }) => {
             try {
-              await updateProfile(values).unwrap();
+              await updateUserInfo(values).unwrap();
               setIsEditOpen(false);
             } catch (err) {
               alert("فشل تعديل البيانات");

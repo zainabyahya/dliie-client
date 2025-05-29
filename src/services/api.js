@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { logout } from '../slices/authSlice';
 
-export const api = createApi({
-    reducerPath: 'api',
-    baseQuery: fetchBaseQuery({
+const baseQueryWithReauth = async (args, api, extraOptions) => {
+    const rawBaseQuery = fetchBaseQuery({
         baseUrl: '/',
         prepareHeaders: (headers, { getState }) => {
             const token = getState().auth?.token;
@@ -11,31 +11,41 @@ export const api = createApi({
             }
             return headers;
         },
-    }),
+    });
+
+    const result = await rawBaseQuery(args, api, extraOptions);
+
+    if (result.error?.status === 401) {
+        api.dispatch(logout());
+        window.location.href = "/login";
+    }
+
+    return result;
+};
+
+export const api = createApi({
+    reducerPath: 'api',
+    baseQuery: baseQueryWithReauth,
     tagTypes: ['Area', 'Competency', 'Questionnaire', 'Assessment', 'User', 'CommunityPost', 'LibraryPost', 'Profile'],
     endpoints: (builder) => ({
-        // 1) GET /areas → [Area]
         getAreas: builder.query({
             query: () => 'areas',
             transformResponse: (res) => res.areas,
             providesTags: ['Area'],
         }),
 
-        // 2) GET /competency → [Competency]
         getCompetencies: builder.query({
             query: () => 'competency',
             transformResponse: (res) => res.competencies || res,
             providesTags: ['Competency'],
         }),
 
-        // 3) GET /questionnaire → [Questionnaire]
         getQuestionnaires: builder.query({
             query: () => 'questionnaire',
             transformResponse: (res) => res.questionnaires,
             providesTags: ['Questionnaire'],
         }),
 
-        // 4) POST /assessment/submit → { user, questionnaire, responses[] }
         submitAssessment: builder.mutation({
             query: (body) => ({
                 url: 'assessment/submit',
@@ -45,13 +55,11 @@ export const api = createApi({
             invalidatesTags: ['Assessment'],
         }),
 
-        // 5) GET /assessment/user/:userId
         getAssessmentByUser: builder.query({
             query: (userId) => `assessment/user/${userId}`,
             providesTags: ['Assessment'],
         }),
 
-        // 6) POST /auth/login → { token, user }
         login: builder.mutation({
             query: (credentials) => ({
                 url: 'auth/login',
@@ -61,7 +69,6 @@ export const api = createApi({
             invalidatesTags: ['User'],
         }),
 
-        // 7) POST /auth/signup → { token, user }
         signup: builder.mutation({
             query: (newUser) => ({
                 url: 'auth/signup',
@@ -71,13 +78,11 @@ export const api = createApi({
             invalidatesTags: ['User'],
         }),
 
-        // 8) GET /community → [CommunityPost]
         getCommunityPosts: builder.query({
             query: () => 'community',
             providesTags: ['CommunityPost'],
         }),
 
-        // 9) POST /community → create a new post
         createCommunityPost: builder.mutation({
             query: (newPost) => ({
                 url: 'community',
@@ -87,13 +92,11 @@ export const api = createApi({
             invalidatesTags: ['CommunityPost'],
         }),
 
-        // 10) GET /community/:id → fetch a single post with comments
         getCommunityPostById: builder.query({
             query: (id) => `community/${id}`,
             providesTags: (result, error, id) => [{ type: 'CommunityPost', id }],
         }),
 
-        // 11) POST /community/:id/comment → add a comment
         addCommentToPost: builder.mutation({
             query: ({ postId, text }) => ({
                 url: `community/${postId}/comments`,
@@ -102,7 +105,7 @@ export const api = createApi({
             }),
             invalidatesTags: (result, error, { postId }) => [{ type: 'CommunityPost', id: postId }],
         }),
-        // DELETE /community/:id → delete a post
+
         deleteCommunityPost: builder.mutation({
             query: (postId) => ({
                 url: `community/${postId}`,
@@ -111,7 +114,6 @@ export const api = createApi({
             invalidatesTags: ['CommunityPost'],
         }),
 
-        // DELETE /community/:postId/comments/:commentId → delete a comment
         deleteComment: builder.mutation({
             query: ({ postId, commentId }) => ({
                 url: `community/${postId}/comments/${commentId}`,
@@ -119,6 +121,7 @@ export const api = createApi({
             }),
             invalidatesTags: (result, error, { postId }) => [{ type: 'CommunityPost', id: postId }],
         }),
+
         updateCommunityPost: builder.mutation({
             query: ({ postId, title, html }) => ({
                 url: `community/${postId}`,
@@ -130,19 +133,16 @@ export const api = createApi({
             ],
         }),
 
-        // 12) GET /library → get all library posts
         getLibraryPosts: builder.query({
             query: () => 'library',
             providesTags: ['LibraryPost'],
         }),
 
-        // 13) GET /library/:id → get one post
         getLibraryPostById: builder.query({
             query: (id) => `library/${id}`,
             providesTags: (result, error, id) => [{ type: 'LibraryPost', id }],
         }),
 
-        // 14) POST /library → create a new post
         createLibraryPost: builder.mutation({
             query: (body) => ({
                 url: 'library',
@@ -152,7 +152,6 @@ export const api = createApi({
             invalidatesTags: ['LibraryPost'],
         }),
 
-        // 15) PUT /library/:id → update a post
         updateLibraryPost: builder.mutation({
             query: ({ id, ...body }) => ({
                 url: `library/${id}`,
@@ -165,7 +164,6 @@ export const api = createApi({
             ],
         }),
 
-        // 16) DELETE /library/:id → delete a post
         deleteLibraryPost: builder.mutation({
             query: (id) => ({
                 url: `library/${id}`,
@@ -173,23 +171,21 @@ export const api = createApi({
             }),
             invalidatesTags: ['LibraryPost'],
         }),
-        // Profile - GET /profile/me
+
         getMyProfile: builder.query({
             query: () => 'profile/me',
             providesTags: ['Profile'],
         }),
 
-        // Profile - PUT /profile/me
-        updateProfile: builder.mutation({
+        updateUserInfo: builder.mutation({
             query: (body) => ({
-                url: 'profile/me',
+                url: 'users/me',
                 method: 'PUT',
                 body,
             }),
-            invalidatesTags: ['Profile'],
+            invalidatesTags: ['User', 'Profile'],
         }),
 
-        // Profile - DELETE user + profile (DELETE /auth/me or similar)
         deleteAccount: builder.mutation({
             query: () => ({
                 url: 'auth/me',
@@ -220,6 +216,6 @@ export const {
     useUpdateLibraryPostMutation,
     useDeleteLibraryPostMutation,
     useGetMyProfileQuery,
-    useUpdateProfileMutation,
+    useUpdateUserInfoMutation,
     useDeleteAccountMutation,
 } = api;
