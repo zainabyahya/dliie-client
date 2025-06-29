@@ -3,24 +3,27 @@ import HeroSection from "../components/HeroSection";
 import Alert from "../ui/Alert";
 import Button from "../ui/Button";
 import Card from "../ui/Card";
+import communityImg from "../assets/community.png";
+import libraryImg from "../assets/library.png";
+import assessmentImg from "../assets/assess.png";
 
 function Home() {
   const modules = [
     {
       id: 1,
-      coverImage: "https://picsum.photos/400/200",
+      coverImage: assessmentImg,
       title: "التقييم الذاتي",
       content: "قيّم مهاراتك الرقمية وحدد نقاط القوة والضعف.",
     },
     {
       id: 2,
-      coverImage: "https://picsum.photos/400/200",
+      coverImage: libraryImg,
       title: "المكتبة الرقمية",
       content: "اكتشف موارد تعليمية متميزة تناسب احتياجاتك.",
     },
     {
       id: 3,
-      coverImage: "https://picsum.photos/400/200",
+      coverImage: communityImg,
       title: "المجتمع",
       content: "تواصل مع معلمين آخرين وتبادل الخبرات والمعرفة.",
     },

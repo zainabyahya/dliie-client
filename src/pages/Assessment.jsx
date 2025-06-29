@@ -6,6 +6,9 @@ import {
   useGetQuestionnairesQuery,
   useSubmitAssessmentMutation,
 } from "../services/api";
+import Loader from "../ui/Loader";
+import ErrorState from "../ui/ErrorState";
+import EmptyState from "../ui/EmptyState";
 
 const Assessment = () => {
   // 1) Fetch all questionnaires (your API slice exports useGetQuestionnairesQuery)
@@ -36,9 +39,17 @@ const Assessment = () => {
     }
   }, [questionnaire]);
 
-  if (isLoading) return <p>Loading…</p>;
-  if (isError) return <p>Failed to load questionnaire</p>;
-  if (!questionnaire) return <p>No questionnaire found</p>;
+  if (isLoading) {
+    return <Loader message="جاري تحميل البيانات التعليمية..." />;
+  }
+
+  if (isError) {
+    return <ErrorState message="فشل في جلب المحتوى ." />;
+  }
+
+  if (!questionnaire) {
+    return <EmptyState message="لا توجد مواد بعد." />;
+  }
 
   // scoring → level
   const computeLevel = (score) => {

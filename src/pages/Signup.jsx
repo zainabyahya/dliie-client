@@ -7,8 +7,11 @@ import Button from "../ui/Button";
 import { useSignupMutation } from "../services/api";
 import { setCredentials } from "../slices/authSlice";
 
+import Loader from "../ui/Loader";
+import ErrorState from "../ui/ErrorState";
+
 const Signup = () => {
-  const [signup, { isLoading }] = useSignupMutation();
+  const [signup, { isLoading, isError }] = useSignupMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -21,7 +24,6 @@ const Signup = () => {
   };
 
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
-    console.log("🚀 ~ handleSubmit ~ values:", values);
     if (values.password !== values.confirmPassword) {
       return setErrors({ confirmPassword: "كلمتا المرور غير متطابقتين" });
     }
@@ -36,6 +38,13 @@ const Signup = () => {
       setSubmitting(false);
     }
   };
+  if (isLoading) {
+    return <Loader message="جاري تحميل معلوماتكم ..." />;
+  }
+
+  if (isError) {
+    return <ErrorState message="فشل في تسجيل الدخول ." />;
+  }
 
   return (
     <div

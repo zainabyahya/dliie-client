@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Assessment from "./pages/Assessment";
-import Auth from "./pages/Auth";
 import Community from "./pages/Community";
 import Learning from "./pages/Learning";
 import Library from "./pages/Library";
@@ -13,6 +12,10 @@ import CommunityPost from './pages/CommunityPost';
 import LibraryPost from './pages/LibraryPost';
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
+import AboutPage from "./pages/About.jsx";
+import ContactUsPage from "./pages/ContactUs.jsx";
+import PrivacyPolicyPage from "./pages/PrivacyPolicy.jsx";
+import LearningPlaceholder from "./ui/LearningPlaceholder.jsx";
 
 function App() {
   return (
@@ -26,12 +29,17 @@ function App() {
           <Route path="/community/:postId" element={<CommunityPost />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/learning/*" element={<Learning />}>
+            <Route index element={<LearningPlaceholder />} />
+
             <Route path=":areaId/:topic" element={<LearningTopicPage />} />
           </Route>
           <Route path="/library" element={<Library />} />
           <Route path="/library/:itemId" element={<LibraryPost />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactUsPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
         </Routes>
       </div>
       <Footer />

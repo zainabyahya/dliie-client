@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Button from "../ui/Button";
 import Modal from "../ui/Modal";
 import FormWrapper from "../ui/FormWrapper";
@@ -9,6 +9,10 @@ import {
   useDeleteAccountMutation,
 } from "../services/api";
 import { logout } from "../slices/authSlice";
+
+import Loader from "../ui/Loader";
+import ErrorState from "../ui/ErrorState";
+import EmptyState from "../ui/EmptyState";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -34,9 +38,17 @@ const Profile = () => {
     }
   };
 
-  if (isLoading) return <p className="p-6">جار التحميل...</p>;
-  if (error || !profile)
-    return <p className="p-6 text-red-600">فشل تحميل الملف الشخصي.</p>;
+  if (isLoading) {
+    return <Loader message="جاري تحميل البيانات الشخصية..." />;
+  }
+
+  if (error) {
+    return <ErrorState message="فشل في جلب الملف ." />;
+  }
+
+  if (!profile) {
+    return <EmptyState message="لا يوحد ملف شخصي بعد." />;
+  }
 
   const {
     user: userInfo = {},

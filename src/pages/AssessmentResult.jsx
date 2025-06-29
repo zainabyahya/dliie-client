@@ -2,6 +2,9 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useGetAssessmentByUserQuery } from "../services/api";
 import { useNavigate } from "react-router-dom";
+import Loader from "../ui/Loader";
+import ErrorState from "../ui/ErrorState";
+import EmptyState from "../ui/EmptyState";
 
 const AssessmentResult = () => {
   const navigate = useNavigate();
@@ -27,9 +30,17 @@ const AssessmentResult = () => {
       </div>
     );
   }
-  if (isLoading) return <p className="p-4">Loading results…</p>;
-  if (isError || !assessment)
-    return <p className="p-4">لم نعثر على نتائجك بعد.</p>;
+  if (isLoading) {
+    return <Loader message="جاري تحميل البيانات التعليمية..." />;
+  }
+
+  if (isError) {
+    return <ErrorState message="فشل في جلب المحتوى ." />;
+  }
+
+  if (!assessment) {
+    return <EmptyState message="لا توجد مواد بعد." />;
+  }
 
   return (
     <div className="p-6" dir="rtl">

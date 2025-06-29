@@ -10,6 +10,9 @@ import {
   useUpdateLibraryPostMutation,
 } from "../services/api";
 
+import Loader from "../ui/Loader";
+import ErrorState from "../ui/ErrorState";
+
 const LibraryPost = () => {
   const { itemId } = useParams();
   const navigate = useNavigate();
@@ -45,9 +48,9 @@ const LibraryPost = () => {
       />
       <div className="mt-4 bg-white p-6 rounded-md shadow-md">
         {isLoading ? (
-          <p>جار التحميل...</p>
+          <Loader message="جاري تحميل البيانات التعليمية..." />
         ) : error ? (
-          <p className="text-red-600">فشل تحميل المنشور.</p>
+          <ErrorState message="فشل في جلب المحتوى ." />
         ) : (
           <>
             <img

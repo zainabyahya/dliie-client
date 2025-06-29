@@ -8,15 +8,17 @@ import Button from "../ui/Button";
 import { useLoginMutation } from "../services/api";
 import { setCredentials } from "../slices/authSlice";
 
+import Loader from "../ui/Loader";
+import ErrorState from "../ui/ErrorState";
+
 const Login = () => {
-  const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading, isError }] = useLoginMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const initialValues = { phoneNumber: "", password: "" };
 
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
-    console.log("🚀 ~ handleSubmit ~ values:", values);
     try {
       const user = await login(values).unwrap();
       // expects your backend to return { user: {...}, token: "..." }
@@ -30,6 +32,13 @@ const Login = () => {
     }
   };
 
+  if (isLoading) {
+    return <Loader message="جاري تحميل معلوماتكم ..." />;
+  }
+
+  if (isError) {
+    return <ErrorState message="فشل في تسجيل الدخول ." />;
+  }
   return (
     <div
       className="min-h-screen p-6 flex justify-center items-center"

@@ -9,6 +9,9 @@ import {
 } from "../services/api";
 import Button from "../ui/Button";
 import CreateLibraryPostModal from "../components/CreateLibraryPostModal";
+import book1Img from "../assets/book2.png";
+import book2Img from "../assets/book2.png";
+import Loader from "../ui/Loader";
 
 const Library = () => {
   const navigate = useNavigate();
@@ -22,7 +25,6 @@ const Library = () => {
     post.title.includes(searchTerm)
   );
 
-  console.log("🚀 ~ Library ~ user:", user);
   return (
     <div className="p-6" dir="rtl">
       <div className="flex justify-between items-center mb-6">
@@ -43,13 +45,13 @@ const Library = () => {
       </div>
 
       {isLoading ? (
-        <p className="text-center text-gray-500">جار التحميل...</p>
+        <Loader message="جاري تحميل البيانات التعليمية..." />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {filteredResources.map((resource) => (
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+          {filteredResources.map((resource, index) => (
             <Card
               key={resource._id}
-              coverImage={"https://picsum.photos/300"}
+              coverImage={index % 2 === 0 ? book1Img : book2Img}
               title={resource.title}
               content={(resource.sections[0]?.html || "").slice(0, 100) + "..."}
               onPress={() => navigate(`/library/${resource._id}`)}

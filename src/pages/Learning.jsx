@@ -2,6 +2,8 @@ import React from "react";
 import AccordionSidebar from "../components/AccordionSidebar";
 import { Outlet } from "react-router-dom";
 import { useGetAreasQuery, useGetCompetenciesQuery } from "../services/api";
+import Loader from "../ui/Loader";
+import ErrorState from "../ui/ErrorState";
 
 const Learning = () => {
   const {
@@ -15,8 +17,9 @@ const Learning = () => {
     isError: cError,
   } = useGetCompetenciesQuery();
 
-  if (aLoading || cLoading) return <p>Loading…</p>;
-  if (aError || cError) return <p>Failed to load data</p>;
+  if (aLoading || cLoading)
+    return <Loader message="جاري تحميل البيانات التعليمية..." />;
+  if (aError || cError) return <ErrorState message="فشل في جلب المحتوى ." />;
 
   const areasWithCompetencies = areas.map((area) => ({
     ...area,

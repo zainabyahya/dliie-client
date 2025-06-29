@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function AccordionSidebar({
-  areas, 
+  areas,
   selectedAreaId,
   selectedCompetencyId,
 }) {
@@ -23,7 +23,7 @@ export default function AccordionSidebar({
       {/* Desktop */}
       <div className="hidden md:block bg-gray-100 border-l border-gray-300 p-4 h-screen">
         <h2 className="font-bold text-lg mb-4">القائمة</h2>
-        {areas.map((area, idx) => (
+        {areas.reverse().map((area, idx) => (
           <div key={area._id} className="mb-2">
             <button
               onClick={() => toggleArea(idx)}

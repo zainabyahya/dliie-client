@@ -192,6 +192,11 @@ export const api = createApi({
                 method: 'DELETE',
             }),
         }),
+        getModulesByCompetency: builder.query({
+            query: (competencyId) => `modules/competency/${competencyId}`,
+            providesTags: (result, error, competencyId) => [{ type: 'Competency', id: competencyId }],
+        }),
+
     }),
 });
 
@@ -218,4 +223,5 @@ export const {
     useGetMyProfileQuery,
     useUpdateUserInfoMutation,
     useDeleteAccountMutation,
+    useGetModulesByCompetencyQuery
 } = api;

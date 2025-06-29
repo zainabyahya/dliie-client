@@ -22,7 +22,13 @@ const Card = ({
       dir="rtl"
     >
       {coverImage && (
-        <img src={coverImage} alt="صورة الغلاف" className="w-full h-48 " />
+        <div className="w-full aspect-w-3 aspect-h-2">
+          <img
+            src={coverImage}
+            alt="صورة الغلاف"
+            className="object-cover w-full h-full"
+          />
+        </div>
       )}
       <div className={clsx("p-4", cardClassname)}>
         {title && (

@@ -6,6 +6,9 @@ import Button from "../ui/Button";
 import FormWrapper from "../ui/FormWrapper";
 import Modal from "../ui/Modal";
 
+import Loader from "../ui/Loader";
+import ErrorState from "../ui/ErrorState";
+
 import {
   useGetCommunityPostByIdQuery,
   useAddCommentToPostMutation,
@@ -66,9 +69,9 @@ const CommunityPost = () => {
 
       <div className="mt-4 bg-white p-6 rounded-md shadow-md">
         {isLoading ? (
-          <p className="text-gray-500">جار التحميل...</p>
+          <Loader message="جاري تحميل البيانات التعليمية..." />
         ) : error ? (
-          <p className="text-red-500">فشل في تحميل المنشور.</p>
+          <ErrorState message="فشل في جلب المحتوى ." />
         ) : (
           <>
             <h1 className="text-2xl font-bold mb-2">{post.title}</h1>

@@ -8,11 +8,13 @@ import {
   useGetCommunityPostsQuery,
 } from "../services/api";
 
+import Loader from "../ui/Loader";
+import ErrorState from "../ui/ErrorState";
+
 function Community() {
   const navigate = useNavigate();
   const [createPost] = useCreateCommunityPostMutation();
   const { data: posts = [], isLoading, error } = useGetCommunityPostsQuery();
-  console.log("🚀 ~ Community ~ data:", posts);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [filterType, setFilterType] = useState("all");
@@ -82,9 +84,9 @@ function Community() {
 
       {/* Posts */}
       {isLoading ? (
-        <p className="text-center text-gray-500">جار التحميل...</p>
+        <Loader message="جاري تحميل البيانات التعليمية..." />
       ) : error ? (
-        <p className="text-center text-red-500">فشل تحميل البيانات.</p>
+        <ErrorState message="فشل في جلب المحتوى ." />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {currentPosts.map((post) => (
