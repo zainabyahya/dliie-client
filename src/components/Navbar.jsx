@@ -72,7 +72,7 @@ function Navbar() {
         className="text-xl font-bold cursor-pointer px-5"
         onClick={() => navigate("/")}
       >
-        ديوان رقمي
+        ديجيتال ديوان
       </div>
 
       {/* Mobile Menu Button */}

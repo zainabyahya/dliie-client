@@ -9,7 +9,7 @@ const HeroSection = () => {
     <section className="relative">
       {/* Blurred background image */}
       <img
-        src={require("../assets/hero.jpg")}
+        src={require("../assets/hero.png")}
         alt="Hero"
         className="w-full h-auto filter blur-sm"
       />
@@ -18,7 +18,7 @@ const HeroSection = () => {
       {/* Text and button overlay */}
       <div className="absolute inset-0 flex flex-col justify-center items-center">
         <h1 className="p-2 text-3xl md:text-4xl font-bold text-white text-center mb-4">
-          مبادرة الثقافة الرقمية للمعلمين العراقيين (DLIIE)
+          مبادرة الثقافة الرقمية للمعلمين العراقيين
         </h1>
         <p className="text-lg text-white mb-6">
           تمكين المعلمين بالمهارات الرقمية الأساسية
