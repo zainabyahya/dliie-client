@@ -3,7 +3,7 @@ import { logout } from '../slices/authSlice';
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
     const rawBaseQuery = fetchBaseQuery({
-        baseUrl: '/',
+        baseUrl: process.env.REACT_APP_BASE_URL,
         prepareHeaders: (headers, { getState }) => {
             const token = getState().auth?.token;
             if (token) {
@@ -12,6 +12,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
             return headers;
         },
     });
+    console.log("🚀 ~ baseQueryWithReauth ~ process.env.REACT_APP_BASE_URL:", process.env.REACT_APP_BASE_URL)
 
     const result = await rawBaseQuery(args, api, extraOptions);
 
