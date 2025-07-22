@@ -11,7 +11,6 @@ const Card = ({
   cardClassname,
   textDirection,
 }) => {
-  console.log("🚀 ~ coverImage:", coverImage);
   return (
     <div
       onClick={onPress}

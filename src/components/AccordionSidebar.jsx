@@ -7,7 +7,6 @@ export default function AccordionSidebar({
   selectedAreaId,
   selectedCompetencyId,
 }) {
-  console.log("🚀 ~ areas:", areas);
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const nav = useNavigate();
