@@ -66,7 +66,7 @@ function Navbar() {
   };
 
   return (
-    <div className="w-full bg-tertiary p-5 text-lg flex flex-row-reverse justify-between items-center relative">
+    <div className="w-full bg-tertiary p-5 text-lg flex flex-row justify-between items-center relative">
       {/* Website Name */}
       <div
         className="text-xl font-bold cursor-pointer px-5"
@@ -109,7 +109,7 @@ function Navbar() {
       </div>
 
       {/* Desktop Navigation */}
-      <div className="hidden lg:flex flex-row-reverse justify-between flex-1 gap-x-5">
+      <div className="hidden lg:flex flex-row justify-between flex-1 gap-x-5">
         <div className="flex flex-row-reverse gap-5 items-center">
           {navLinks.map(({ label, path }) => (
             <span
