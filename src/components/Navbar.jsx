@@ -110,7 +110,7 @@ function Navbar() {
 
       {/* Desktop Navigation */}
       <div className="hidden lg:flex flex-row justify-between flex-1 gap-x-5">
-        <div className="flex flex-row-reverse gap-5 items-center">
+        <div className="flex flex-row gap-5 items-center">
           {navLinks.map(({ label, path }) => (
             <span
               key={path}
