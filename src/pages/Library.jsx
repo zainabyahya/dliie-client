@@ -48,7 +48,7 @@ const Library = () => {
       {isLoading ? (
         <Loader message="جاري تحميل البيانات التعليمية..." />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {filteredResources.map((resource, index) => (
             <Card
               key={resource._id}
