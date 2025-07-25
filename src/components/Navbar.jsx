@@ -9,7 +9,7 @@ const navLinks = [
   { label: "المكتبة", path: "/library" },
   { label: "التقييم", path: "/assessment" },
   { label: "وحدات التعلم", path: "/learning" },
-  { label: "المجتمع", path: "/community" },
+  { label: "الديوان", path: "/community" },
 ];
 
 function Navbar() {
@@ -121,7 +121,7 @@ function Navbar() {
             </span>
           ))}
         </div>
-        <div className="flex flex-row-reverse gap-5">
+        <div className="flex flex-row gap-5">
           {isAuthenticated ? (
             <>
               <span
