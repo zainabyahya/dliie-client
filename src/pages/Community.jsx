@@ -7,12 +7,15 @@ import {
   useCreateCommunityPostMutation,
   useGetCommunityPostsQuery,
 } from "../services/api";
+import { useSelector } from "react-redux";
 
 import Loader from "../ui/Loader";
 import ErrorState from "../ui/ErrorState";
 
 function Community() {
   const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
+
   const [createPost] = useCreateCommunityPostMutation();
   const { data: posts = [], isLoading, error } = useGetCommunityPostsQuery();
 
@@ -54,12 +57,14 @@ function Community() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">المجتمع</h1>
-        <Button
-          label="إنشاء منشور جديد"
-          onPress={handleCreateClick}
-          type="primary"
-          shape="rectangle"
-        />
+        {user && (
+          <Button
+            label="إنشاء منشور جديد"
+            onPress={handleCreateClick}
+            type="primary"
+            shape="rectangle"
+          />
+        )}
       </div>
 
       {/* Filters */}

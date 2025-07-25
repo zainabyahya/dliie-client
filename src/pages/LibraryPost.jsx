@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import book1Img from "../assets/book2.png";
 
 import Button from "../ui/Button";
 import EditLibraryPostModal from "../components/EditLibraryPostModal";
@@ -54,7 +55,7 @@ const LibraryPost = () => {
         ) : (
           <>
             <img
-              src={"https://picsum.photos/300/200"}
+              src={book1Img}
               alt="صورة المنشور"
               className="w-full h-48 object-cover mb-4"
             />

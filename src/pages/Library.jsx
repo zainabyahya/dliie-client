@@ -9,13 +9,14 @@ import {
 } from "../services/api";
 import Button from "../ui/Button";
 import CreateLibraryPostModal from "../components/CreateLibraryPostModal";
-import book1Img from "../assets/book2.png";
+import book1Img from "../assets/book1.png";
 import book2Img from "../assets/book2.png";
 import Loader from "../ui/Loader";
 
 const Library = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
+  console.log("🚀 ~ Library ~ user:", user);
   const { data: posts = [], isLoading } = useGetLibraryPostsQuery();
   const [createPost] = useCreateLibraryPostMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,7 +33,7 @@ const Library = () => {
           المكتبة الرقمية
         </h1>
         {user?.role === "admin" && (
-          <Button label="إضافة منشور" onPress={() => setIsModalOpen(true)} />
+          <Button label="إضافة مصدر" onPress={() => setIsModalOpen(true)} />
         )}
       </div>
 
