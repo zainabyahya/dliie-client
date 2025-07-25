@@ -87,11 +87,11 @@ const Profile = () => {
           <span className="font-semibold">نتيجة التقييم الأخيرة:</span>{" "}
           {assessmentScore}
         </p>
-        <p>
+        {/* <p>
           <span className="font-semibold">وحدة التعلم الحالية:</span>{" "}
           {currentlyDoing ? currentlyDoing.title : "لا يوجد"}
         </p>
-
+*/}
         <div className="flex gap-4 mt-4">
           <Button
             label="تعديل المعلومات الشخصية"
