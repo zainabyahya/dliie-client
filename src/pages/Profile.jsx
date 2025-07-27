@@ -76,10 +76,10 @@ const Profile = () => {
           <span className="font-semibold">الاسم الأخير:</span>{" "}
           {userInfo.lastName}
         </p>
-        <p>
+        {/* <p>
           <span className="font-semibold">رقم الهاتف:</span>{" "}
           {userInfo.phoneNumber}
-        </p>
+        </p> */}
         <p>
           <span className="font-semibold">المستوى الحالي:</span> {currentLevel}
         </p>
