@@ -23,7 +23,7 @@ function Community() {
   const [filterType, setFilterType] = useState("all");
   const [isModalOpen, setModalOpen] = useState(false);
 
-  const pageSize = 2;
+  const pageSize = 9;
   const filteredPosts = posts.filter((post) =>
     filterType === "all" ? true : post.type === filterType
   );
@@ -93,7 +93,7 @@ function Community() {
       ) : error ? (
         <ErrorState message="فشل في جلب المحتوى ." />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {currentPosts.map((post) => (
             <Card
               key={post._id}
