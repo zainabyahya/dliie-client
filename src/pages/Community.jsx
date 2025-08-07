@@ -99,7 +99,7 @@ function Community() {
               key={post._id}
               image={null}
               title={post.title}
-              content={post.html}
+              content={(post.html || "").slice(0, 300) + "..."}
               onPress={() => handleCardClick(post._id)}
             />
           ))}
